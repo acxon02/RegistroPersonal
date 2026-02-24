@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Conexión API</title>
+</head>
+<body>
+    <h2>Prueba de Conexión con Django API</h2>
+    
+    <button onclick="testGet()">Probar GET</button>
+    <button onclick="testPost()">Probar POST</button>
+    
+    <div id="resultado" style="margin-top: 20px; padding: 10px; border: 1px solid #ccc;"></div>
+
+    <script>
+        const API_URL = 'http://127.0.0.1:8000/api/personal/';
+        
+        async function testGet() {
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = 'Probando GET...';
+            
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                
+                resultado.innerHTML = `
+                    <h3>✅ GET exitoso!</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Registros encontrados: ${data.length}</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultado.innerHTML = `
+                    <h3>❌ Error de conexión</h3>
+                    <p>${error.message}</p>
+                    <p>Verifica que el servidor Django esté corriendo en http://127.0.0.1:8000</p>
+                `;
+            }
+        }
+        
+        async function testPost() {
+            const resultado = document.getElementById('resultado');
+            resultado.innerHTML = 'Probando POST...';
+            
+            const datosPrueba = {
+                "nombres": "Test",
+                "apellido_paterno": "Usuario",
+                "apellido_materno": "Prueba",
+                "fecha_nacimiento": "1990-01-01",
+                "sexo": "M",
+                "curp": "TEUP900101HDFRRN01",
+                "rfc": "TEUP9001011A2",
+                "nss": "12345678901",
+                "email": "test@prueba.com",
+                "telefono": "5555555555",
+                "celular": "5555555555",
+                "calle": "Calle Test",
+                "numero_exterior": "123",
+                "numero_interior": "",
+                "colonia": "Colonia Test",
+                "ciudad": "Ciudad Test",
+                "estado": "Estado Test",
+                "codigo_postal": "12345",
+                "fecha_ingreso": "2024-01-01",
+                "puesto": "Puesto Test",
+                "departamento": "Departamento Test",
+                "salario": 50000.00,
+                "estado_civil": "S",
+                "contacto_emergencia_nombre": "Contacto Test",
+                "contacto_emergencia_telefono": "5555555556",
+                "contacto_emergencia_parentesco": "Parentesco Test"
+            };
+            
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(datosPrueba)
+                });
+                
+                const data = await response.json();
+                
+                resultado.innerHTML = `
+                    <h3>✅ POST exitoso!</h3>
+                    <p>Status: ${response.status}</p>
+                    <p>Respuesta:</p>
+                    <pre>${JSON.stringify(data, null, 2)}</pre>
+                `;
+            } catch (error) {
+                resultado.innerHTML = `
+                    <h3>❌ Error en POST</h3>
+                    <p>${error.message}</p>
+                    <p>Status: ${error.status}</p>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>

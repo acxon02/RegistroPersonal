@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Personal</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="logo">
+                <i class="fas fa-users-cog"></i>
+                <h2>Personal<span>Manager</span></h2>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" onclick="mostrarSeccion('dashboard')">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" onclick="mostrarSeccion('registro')">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Registrar Personal</span>
+                </a>
+                <a href="#" class="nav-item" onclick="mostrarSeccion('lista')">
+                    <i class="fas fa-list"></i>
+                    <span>Lista de Personal</span>
+                </a>
+                <a href="#" class="nav-item" onclick="mostrarSeccion('estadisticas')">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Estadísticas</span>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Administrador</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="header">
+                <div class="header-title">
+                    <h1 id="pageTitle">Dashboard</h1>
+                    <p id="pageDescription">Bienvenido al sistema de gestión de personal</p>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-refresh" onclick="cargarPersonal()">
+                        <i class="fas fa-sync-alt"></i>
+                    </button>
+                    <div class="date-display">
+                        <i class="fas fa-calendar"></i>
+                        <span id="fechaActual"></span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="section active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon blue">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalPersonal">0</h3>
+                            <p>Total Personal</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon green">
+                            <i class="fas fa-user-check"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalActivos">0</h3>
+                            <p>Activos</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon orange">
+                            <i class="fas fa-user-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalInactivos">0</h3>
+                            <p>Inactivos</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon purple">
+                            <i class="fas fa-building"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="totalDepartamentos">0</h3>
+                            <p>Departamentos</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-card">
+                        <h3>Personal por Departamento</h3>
+                        <div id="departamentoChart" class="chart-container">
+                            <!-- Gráfico se generará aquí -->
+                        </div>
+                    </div>
+                    <div class="chart-card">
+                        <h3>Distribución por Sexo</h3>
+                        <div id="sexoChart" class="chart-container">
+                            <!-- Gráfico se generará aquí -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="recent-list">
+                    <h3>Últimos Registros</h3>
+                    <div id="recentPersonal" class="recent-container">
+                        <!-- Lista de últimos registros -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Registro Section -->
+            <section id="registro" class="section">
+                <div class="form-card">
+                    <h2><i class="fas fa-user-plus"></i> Registrar Nuevo Personal</h2>
+                    
+                    <form id="personalForm">
+                        <div class="form-tabs">
+                            <button type="button" class="tab-btn active" onclick="cambiarTab('datos-personales')">Datos Personales</button>
+                            <button type="button" class="tab-btn" onclick="cambiarTab('contacto')">Contacto</button>
+                            <button type="button" class="tab-btn" onclick="cambiarTab('direccion')">Dirección</button>
+                            <button type="button" class="tab-btn" onclick="cambiarTab('laboral')">Datos Laborales</button>
+                            <button type="button" class="tab-btn" onclick="cambiarTab('emergencia')">Emergencia</button>
+                        </div>
+
+                        <div id="datos-personales" class="tab-content active">
+                            <h3>Datos Personales</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label><i class="fas fa-user"></i> Nombres *</label>
+                                    <input type="text" name="nombres" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-user"></i> Apellido Paterno *</label>
+                                    <input type="text" name="apellido_paterno" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-user"></i> Apellido Materno</label>
+                                    <input type="text" name="apellido_materno">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar"></i> Fecha Nacimiento *</label>
+                                    <input type="date" name="fecha_nacimiento" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-venus-mars"></i> Sexo *</label>
+                                    <select name="sexo" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="M">Masculino</option>
+                                        <option value="F">Femenino</option>
+                                        <option value="O">Otro</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-ring"></i> Estado Civil *</label>
+                                    <select name="estado_civil" required>
+                                        <option value="">Seleccione...</option>
+                                        <option value="S">Soltero</option>
+                                        <option value="C">Casado</option>
+                                        <option value="D">Divorciado</option>
+                                        <option value="V">Viudo</option>
+                                        <option value="UL">Unión Libre</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-id-card"></i> CURP *</label>
+                                    <input type="text" name="curp" maxlength="18" required placeholder="18 caracteres">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-file-signature"></i> RFC *</label>
+                                    <input type="text" name="rfc" maxlength="13" required placeholder="13 caracteres">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-shield-alt"></i> NSS *</label>
+                                    <input type="text" name="nss" maxlength="11" required placeholder="11 dígitos">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="contacto" class="tab-content">
+                            <h3>Información de Contacto</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label><i class="fas fa-envelope"></i> Email *</label>
+                                    <input type="email" name="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-phone"></i> Teléfono *</label>
+                                    <input type="text" name="telefono" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-mobile-alt"></i> Celular *</label>
+                                    <input type="text" name="celular" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="direccion" class="tab-content">
+                            <h3>Dirección</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label><i class="fas fa-road"></i> Calle *</label>
+                                    <input type="text" name="calle" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-door-open"></i> N° Exterior *</label>
+                                    <input type="text" name="numero_exterior" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-door-closed"></i> N° Interior</label>
+                                    <input type="text" name="numero_interior">
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-pin"></i> Colonia *</label>
+                                    <input type="text" name="colonia" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-city"></i> Ciudad *</label>
+                                    <input type="text" name="ciudad" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-map-marked"></i> Estado *</label>
+                                    <input type="text" name="estado" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-mail-bulk"></i> Código Postal *</label>
+                                    <input type="text" name="codigo_postal" maxlength="5" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="laboral" class="tab-content">
+                            <h3>Datos Laborales</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label><i class="fas fa-calendar-alt"></i> Fecha Ingreso *</label>
+                                    <input type="date" name="fecha_ingreso" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-briefcase"></i> Puesto *</label>
+                                    <input type="text" name="puesto" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-building"></i> Departamento *</label>
+                                    <input type="text" name="departamento" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-money-bill"></i> Salario *</label>
+                                    <input type="number" name="salario" step="0.01" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div id="emergencia" class="tab-content">
+                            <h3>Contacto de Emergencia</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label><i class="fas fa-user-tie"></i> Nombre *</label>
+                                    <input type="text" name="contacto_emergencia_nombre" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-phone-alt"></i> Teléfono *</label>
+                                    <input type="text" name="contacto_emergencia_telefono" required>
+                                </div>
+                                <div class="form-group">
+                                    <label><i class="fas fa-heart"></i> Parentesco *</label>
+                                    <input type="text" name="contacto_emergencia_parentesco" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Guardar Personal
+                            </button>
+                            <button type="button" class="btn btn-secondary" onclick="limpiarFormulario()">
+                                <i class="fas fa-eraser"></i> Limpiar
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </section>
+
+            <!-- Lista Section -->
+            <section id="lista" class="section">
+                <div class="list-card">
+                    <div class="list-header">
+                        <h2><i class="fas fa-list"></i> Personal Registrado</h2>
+                        <div class="list-controls">
+                            <div class="search-box">
+                                <i class="fas fa-search"></i>
+                                <input type="text" id="searchInput" placeholder="Buscar por nombre, CURP, RFC..." onkeyup="buscarPersonal()">
+                            </div>
+                            <select id="filterStatus" onchange="filtrarPersonal()">
+                                <option value="todos">Todos</option>
+                                <option value="activos">Activos</option>
+                                <option value="inactivos">Inactivos</option>
+                            </select>
+                            <select id="filterDepartamento" onchange="filtrarPersonal()">
+                                <option value="">Todos los departamentos</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <table id="personalTable">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre Completo</th>
+                                    <th>CURP</th>
+                                    <th>RFC</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Puesto</th>
+                                    <th>Departamento</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="personalTableBody">
+                                <tr>
+                                    <td colspan="10" class="loading-row">
+                                        <div class="loading-spinner"></div>
+                                        Cargando datos...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="pagination">
+                        <button onclick="cambiarPagina('anterior')" id="btnAnterior">
+                            <i class="fas fa-chevron-left"></i> Anterior
+                        </button>
+                        <span id="pageInfo">Página 1 de 1</span>
+                        <button onclick="cambiarPagina('siguiente')" id="btnSiguiente">
+                            Siguiente <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Estadísticas Section -->
+            <section id="estadisticas" class="section">
+                <div class="stats-detailed">
+                    <h2>Estadísticas Detalladas</h2>
+                    <div class="stats-detailed-grid" id="statsDetailed">
+                        <!-- Se llenará dinámicamente -->
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal para Editar -->
+    <div id="editModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-edit"></i> Editar Personal</h2>
+                <span class="close" onclick="cerrarModal()">&times;</span>
+            </div>
+            <div class="modal-body" id="editFormContainer">
+                <!-- El formulario de edición se cargará aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Ver Detalles -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content modal-large">
+            <div class="modal-header">
+                <h2><i class="fas fa-id-card"></i> Detalles del Personal</h2>
+                <span class="close" onclick="cerrarModal('viewModal')">&times;</span>
+            </div>
+            <div class="modal-body" id="viewDetailsContainer">
+                <!-- Los detalles se cargarán aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div id="confirmModal" class="modal">
+        <div class="modal-content modal-small">
+            <div class="modal-header warning">
+                <i class="fas fa-exclamation-triangle"></i>
+                <h3>Confirmar Acción</h3>
+            </div>
+            <div class="modal-body">
+                <p id="confirmMessage">¿Estás seguro de que deseas realizar esta acción?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="cerrarModal('confirmModal')">
+                    <i class="fas fa-times"></i> Cancelar
+                </button>
+                <button class="btn btn-danger" id="confirmActionBtn">
+                    <i class="fas fa-check"></i> Confirmar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
